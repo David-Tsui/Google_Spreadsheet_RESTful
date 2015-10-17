@@ -2,10 +2,10 @@
 Easy and flexible to get data from spreadsheet and post data to it. Ajax only, no hidden iframe, no need a google form, doGet() data explosure elimated.
 
 How:
+
 1. Open a google spreadsheet, open the App Script editor, name your worksheet "Sheet1"(later you can modify it)
 
 2. Open a project, then paste the appscript.js into a blank .gs file.
-
 
 3. Save it, choose the function "setup" to run.
 
