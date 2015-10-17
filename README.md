@@ -13,5 +13,5 @@ How:
 
 6. Set security level "anyone, even anonymously" and enable service.
 
-7. Copy the application url, which is the url used by ajax;
+7. Copy the application url, which is the url used by ajax.
 
