@@ -15,3 +15,8 @@ How:
 
 7. Copy the application url, which is the url used by ajax.
 
+
+Notice:
+
+When using ajax "get", you should add a querystring(any string) as parameter, this give you a authority to do get.
+Otherwise, you will get no data.
