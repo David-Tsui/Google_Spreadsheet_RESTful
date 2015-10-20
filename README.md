@@ -1,7 +1,7 @@
 # Google_Spreadsheet_RESTful
 Easy and flexible to get data from spreadsheet and post data to it. Ajax only, no hidden iframe, no need a google form, doGet() data explosure eliminated.
 
-#**How To Use:**
+##**How To Use:**
 
 1. Open a google spreadsheet, open the App Script editor, name your worksheet "Sheet1"(later you can modify it)
 
@@ -17,7 +17,7 @@ Easy and flexible to get data from spreadsheet and post data to it. Ajax only, n
 
 
 
-#**Notice:**
+##**Notice:**
 
 When using ajax "get", you should add a querystring(any string) as parameter, this give you a authority to do get.
 Otherwise, you will get nothing.
