@@ -20,4 +20,4 @@ Easy and flexible to get data from spreadsheet and post data to it. Ajax only, n
 #**Notice:**
 
 When using ajax "get", you should add a querystring(any string) as parameter, this give you a authority to do get.
-Otherwise, you will get no data.
+Otherwise, you will get nothing.
