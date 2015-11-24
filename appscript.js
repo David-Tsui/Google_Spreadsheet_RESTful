@@ -78,7 +78,7 @@ function handleResponse(e, type, check) {
     }
     else {
       return (
-        ContentService.createTextOutput(JSON.stringify({"result":"success", "type": type, "row": nextRow}))
+        ContentService.createTextOutput(JSON.stringify({"result":"error", "type": type, "reason": "no authority"}))
         .setMimeType(ContentService.MimeType.JSON)
       ); 
     }
@@ -96,4 +96,3 @@ function setup() {
   var doc = SpreadsheetApp.getActiveSpreadsheet();
   SCRIPT_PROP.setProperty("key", doc.getId());
 }
-
