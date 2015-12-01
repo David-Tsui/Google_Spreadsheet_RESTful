@@ -83,7 +83,7 @@ function handleResponse(e, type, check) {
           var keys = Object.keys(obj);
           for(var i = 0; i < keys.length; i++) {
             var key = keys[i];
-            sheet.getRange(temp_row, arr[i], 1, 1).setValue(obj[key]);
+            sheet.getRange(ret_row, arr[i], 1, 1).setValue(obj[key]);
           }
           return (
             ContentService.createTextOutput(JSON.stringify({"result":"success", "type": "modify"}))
