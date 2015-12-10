@@ -81,7 +81,7 @@ function handleResponse(e, type, check) {
     else if (type == "post") {
       var obj = e.parameter;
       var arr = [];
-      var ret_row = CheckPostIsActualModify(obj);
+      var ret_row = CheckPostIsActualModify(obj); // 回傳是哪一row
       if (ret_row != -1) {
         var password_column = getThisColumn(RECOGNIZE_COLUMN.password);
         if (checkInfoCorrespond(ret_row, password_column, obj[RECOGNIZE_COLUMN.password])) {
@@ -98,9 +98,10 @@ function handleResponse(e, type, check) {
             var key = keys[i];
             sheet.getRange(ret_row, arr[i], 1, 1).setValue(obj[key]);
           }
+          var ret_obj = getRowObj(ret_row);
           return (
             ContentService
-            .createTextOutput(JSON.stringify({"result":"success", "type": "modify"}))
+            .createTextOutput(JSON.stringify({"result":"success", "type": "modify", "output": ret_obj}))
             .setMimeType(ContentService.MimeType.JSON)
           );
         }
@@ -151,10 +152,10 @@ function CheckPostIsActualModify(obj) {
   var headers = sheet.getRange(1, 1, 1, sheet.getLastColumn()).getValues()[0];
   var name_column = getThisColumn(RECOGNIZE_COLUMN.username);
   
-  for(var i = 2; i <= rows; i++) {
+  for(var i = 1; i <= rows; i++) {
     var value = sheet.getRange(i, name_column + 1, 1, 1).getValue(); // range的座標從1開始
     if (value == obj[RECOGNIZE_COLUMN.username]) {
-      return i;
+      return i; // 回傳該row
     }
   }
   return -1; // 找不到
@@ -197,24 +198,38 @@ function searchValue(vals, search_columns) { // 處理多項需要驗證的資�
   var headers = sheet.getRange(1, 1, 1, sheet.getLastColumn()).getValues()[0];
   var values = sheet.getDataRange().getValues();
   for(var i = 0; i < values.length; i++) {
-    var row = values[i]; // 一次抓一列
-    var ret_obj = {};
+    var rowData = values[i]; // 一次抓一列
     var check = false; // 是否回傳的flag
     search_columns.forEach(function(col, j) { // 全部符合才是true
       if (row[col] == vals[j]) {
         check = true;
-        Logger.log(row);    
+        //Logger.log(row);    
       } else {
         check = false;
       }
     })
     if (check) {
-      row.forEach(function(ele, i) {
-        ret_obj[headers[i]] = ele;
-      })
-      Logger.log(ret_obj);
-      return ret_obj; 
+      return rowToObj(rowData); 
     }
   }
   return null;
+}
+
+function getRowObj(row) {
+  var doc = SpreadsheetApp.openById(SCRIPT_PROP.getProperty("key"));
+  var sheet = doc.getSheetByName(SHEET_NAME);
+  var row_arr = sheet.getRange(row, 1, 1, sheet.getLastColumn()).getValues()[0];
+  var ret_obj = rowToObj(row_arr);
+  return ret_obj;
+}
+
+function rowToObj(row_arr) {
+  var doc = SpreadsheetApp.openById(SCRIPT_PROP.getProperty("key"));
+  var sheet = doc.getSheetByName(SHEET_NAME);
+  var headers = sheet.getRange(1, 1, 1, sheet.getLastColumn()).getValues()[0];
+  var ret_obj = {};
+  row_arr.forEach(function(ele, i) {
+    ret_obj[headers[i]] = ele;
+  })
+  return ret_obj;
 }
