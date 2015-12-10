@@ -50,7 +50,16 @@ function handleResponse(e, type, check) {
       var row = sheet.getRange(start_row, 1, sheet.getLastRow() - 1, headers.length).getValues();
       var testString = e.queryString;
       var decode_obj = decodeQueryString(testString);
-      if (isQueryString(testString)) { /* 有querystring代表是查詢指令，轉換為obj後搜索試算表 */
+      var obj_keys = Object.keys(decode_obj);
+      if (obj_keys.length == 1 && obj_keys[0] == "SHEET_NAME") {
+        /* 只是要抓不同sheet的所有data */
+        SHEET_NAME = decode_obj[obj_keys[0]];
+        sheet = doc.getSheetByName(SHEET_NAME);
+        headers = sheet.getRange(1, 1, 1, sheet.getLastColumn()).getValues()[0];
+        nextRow = sheet.getLastRow() + 1; // get next row
+        row = sheet.getRange(start_row, 1, sheet.getLastRow() - 1, headers.length).getValues();   
+      }
+      else if (isQueryString(testString)) { /* 有querystring代表是查詢指令，轉換為obj後搜索試算表 */
         var search_keys = [], search_columns = [];
         for(var key in decode_obj) {
           search_keys.push(decode_obj[key]);
