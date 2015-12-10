@@ -43,49 +43,57 @@ function handleResponse(e, type, check) {
     var start_row = e.parameter.start_row || 2; // if data has header, 2; if not, set 1.
     
     var headers = sheet.getRange(1, 1, 1, sheet.getLastColumn()).getValues()[0];
-    var nextRow = sheet.getLastRow() + 1; // get next row
+    var lastRow = sheet.getLastRow();
+    var nextRow = lastRow + 1; // get next row
     var ret = [];
 
     if (type == "get" && check != "Authentication failed") {
+      if (lastRow == 1) // 只有headers
+        return (
+          ContentService
+          .createTextOutput(JSON.stringify({"result":"success", "type": type, "row": lastRow, "output": ret, "query": decode_obj}))
+          .setMimeType(ContentService.MimeType.JSON)
+        );
       var row = sheet.getRange(start_row, 1, sheet.getLastRow() - 1, headers.length).getValues();
-      var testString = e.queryString;
-      var decode_obj = decodeQueryString(testString);
-      var obj_keys = Object.keys(decode_obj);
-      if (obj_keys.length == 1 && obj_keys[0] == "SHEET_NAME") {
-        /* 只是要抓不同sheet的所有data */
-        SHEET_NAME = decode_obj[obj_keys[0]];
-        sheet = doc.getSheetByName(SHEET_NAME);
-        headers = sheet.getRange(1, 1, 1, sheet.getLastColumn()).getValues()[0];
-        nextRow = sheet.getLastRow() + 1; // get next row
-        row = sheet.getRange(start_row, 1, sheet.getLastRow() - 1, headers.length).getValues();   
-      }
-      else if (isQueryString(testString)) { /* 有querystring代表是查詢指令，轉換為obj後搜索試算表 */
-        var search_keys = [], search_columns = [];
-        for(var key in decode_obj) {
-          search_keys.push(decode_obj[key]);
-          search_columns.push(getThisColumn(key));
+      var testString = e.queryString;    
+      if (isQueryString(testString)) { /* 有querystring代表是查詢指令，轉換為obj後搜索試算表 */
+        var decode_obj = decodeQueryString(testString);
+        var obj_keys = Object.keys(decode_obj);
+        if (obj_keys.length == 1 && obj_keys[0] == "SHEET_NAME") {
+          /* 只是要抓不同sheet的所有data */
+          SHEET_NAME = decode_obj[obj_keys[0]];
+          sheet = doc.getSheetByName(SHEET_NAME);
+          headers = sheet.getRange(1, 1, 1, sheet.getLastColumn()).getValues()[0];
+          lastRow = sheet.getLastRow();
+          nextRow = lastRow + 1; // get next row
+          row = sheet.getRange(start_row, 1, sheet.getLastRow() - 1, headers.length).getValues();   
+        } else {
+          var search_keys = [], search_columns = [];
+          var check = false;
+          for(var key in decode_obj) {        
+            search_keys.push(decode_obj[key]);
+            search_columns.push(getThisColumn(key));
+          }
+          ret.push(searchValue(search_keys, search_columns));
+          return (
+            ContentService
+            .createTextOutput(JSON.stringify({"result":"success", "type": type, "row": lastRow, "output": ret, "query": decode_obj}))
+            .setMimeType(ContentService.MimeType.JSON)
+          );
         }
-        ret.push(searchValue(search_keys, search_columns));
-        return (
-          ContentService
-          .createTextOutput(JSON.stringify({"result":"success", "type": type, "row": nextRow, "output": ret, "query": decode_obj}))
-          .setMimeType(ContentService.MimeType.JSON)
-        );
       }
-      else {
-        row.forEach(function(column) {
-          var temp = {};
-          column.forEach(function(element, index) {
-            temp[headers[index]] = element
-          })
-          ret.push(temp);       
+      row.forEach(function(column) {
+        var temp = {};
+        column.forEach(function(element, index) {
+          temp[headers[index]] = element
         })
-        return (
-          ContentService
-          .createTextOutput(JSON.stringify({"result":"success", "type": type, "row": nextRow, "output": ret}))
-          .setMimeType(ContentService.MimeType.JSON)
-        );
-      }
+        ret.push(temp);       
+      })
+      return (
+        ContentService
+        .createTextOutput(JSON.stringify({"result":"success", "type": type, "row": lastRow, "output": ret}))
+        .setMimeType(ContentService.MimeType.JSON)
+      );
     }
     else if (type == "post") {
       var obj = e.parameter;
