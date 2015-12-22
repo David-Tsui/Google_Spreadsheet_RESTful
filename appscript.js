@@ -168,11 +168,12 @@ function CheckPostIsActualModify(obj) {
   var columns = sheet.getLastColumn();
   var headers = sheet.getRange(1, 1, 1, sheet.getLastColumn()).getValues()[0];
   var name_column = getThisColumn(RECOGNIZE_COLUMN.username);
-  
-  for(var i = 1; i <= rows; i++) {
-    var value = sheet.getRange(i, name_column + 1, 1, 1).getValue(); // range的座標從1開始
-    if (value == obj[RECOGNIZE_COLUMN.username]) {
-      return i; // 回傳該row
+  if (name_column != -1) {
+    for(var i = 1; i <= rows; i++) {
+      var value = sheet.getRange(i, name_column + 1, 1, 1).getValue(); // range的座標從1開始
+      if (value == obj[RECOGNIZE_COLUMN.username]) {
+        return i; // 回傳該row
+      }
     }
   }
   return -1; // 找不到
