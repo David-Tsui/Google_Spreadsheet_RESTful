@@ -1,8 +1,8 @@
 var SCRIPT_PROP = PropertiesService.getScriptProperties(); 
 var SHEET_NAME = "Sheet1";
 var RECOGNIZE_COLUMN = {  /*驗證用欄位，可改成其他*/
-  username: "姓名",
-  password: "信箱"
+  username: "name",
+  password: "email"
 };
 
 var decodeQueryString = (function(d,x,params,pair,i) {
@@ -149,7 +149,7 @@ function handleResponse(e, type, check) {
     }
     return (
       ContentService
-      .createTextOutput(JSON.stringify({"result":"error", "type": type, "reason": "Permission denied"}))
+      .createTextOutput(JSON.stringify({"result":"error", "type": type, "reason": "Permission denied", "event": e}))
       .setMimeType(ContentService.MimeType.JSON)
     ); 
   } catch(e){
@@ -202,9 +202,11 @@ function getThisColumn(column_name) { // 回傳以0為首的column index
 }
 
 function isQueryString(str) {
-  var reg = new RegExp("(\\w+=[\\w\.]+)\&*", "gi");
-  if (str.match(reg) !== null)
-    return true;
+  if (str !== null) {
+    var reg = new RegExp("(\\w+=[\\w\.]+)\&*", "gi");
+    if (str.match(reg) !== null)
+      return true;
+  }
   return false;
 }
 
@@ -219,7 +221,7 @@ function searchValue(vals, search_columns) { // 處理多項需要驗證的資�
     var rowData = values[i]; // 一次抓一列
     var check = false; // 是否回傳的flag
     search_columns.forEach(function(col, j) { // 全部符合才是true
-      if (row[col] == vals[j]) {
+      if (rowData[col] == vals[j]) {
         check = true;
         //Logger.log(row);    
       } else {
