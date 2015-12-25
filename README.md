@@ -51,20 +51,22 @@ var query_obj = {
 
 1. select all data at default sheet(just mentioned above)
 
-   → ```javascript
-     var query_obj = {} | [] | "string";
-     ```
+   → 
+   ```javascript
+   var query_obj = {} | [] | "string";
+   ```
 
    Well, just pass anything not null
 
 2. select some data by specific column
 
-	 → ```javascript
-	   var query_obj = {
-			 SELECT_COLUMN: [
-			 	 "name", "age" 
-			 ]
-		 };
-		 ``` 
-
+	 → 
+	 ```javascript
+	 var query_obj = {
+		 SELECT_COLUMN: [
+			 "name", "age" 
+		 ]
+	 };
+	 ``` 
+	 
 3.
