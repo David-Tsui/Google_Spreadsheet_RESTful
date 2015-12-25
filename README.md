@@ -51,35 +51,35 @@ var query_obj = {
 
 1. select all data at default sheet(just mentioned above)
 
-   ```javascript
-   var query_obj = {} | [] | "string";
-   ```
+  ```javascript
+  var query_obj = {} | [] | "string";
+  ```
 
    Well, just pass something which is not null :D
 
 	 If ajax success, it returns: 
 
-   ```javascript
-   [
-     {
-       header1: "something"
-       header2: 123
-     },
-     {
-       header1: "something"
-       header2: 123
-     },
-     /*
-     .
-     .
-     .
-	   */
-		 {
-		   header1: "something"
-		   header2: 123
-		 }
-   ]
-   ```
+  ```javascript
+  [
+    {
+      header1: "something"
+      header2: 123
+    },
+    {
+      header1: "something"
+      header2: 123
+    },
+    /*
+    .
+    .
+    .
+	  */
+		{
+			header1: "something"
+		  header2: 123
+		}
+  ]
+  ```
 
 2. select some row by specific column
  
