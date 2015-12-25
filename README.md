@@ -23,7 +23,7 @@ the api.
 The usage of **GET** with ajax
 
 ```javascript
-$.get(api, {query: JSON.stringify(query_obj)}, function(){});
+$.get(api, {query: JSON.stringify(query_obj)}, function(response){ /*stmt*/ });
 ```
 
 ```javascript
@@ -51,16 +51,20 @@ var query_obj = {
 
 1. select all data at default sheet(just mentioned above)
 
-   → `var query_obj = {} | [] | "string";`
+   → ```javascript
+     var query_obj = {} | [] | "string";
+     ```
 
-   ```Well, just pass anything not null```
+   Well, just pass anything not null
 
 2. select some data by specific column
 
-	 → `var query_obj = {
-		 SELECT_COLUMN: [
-		 	 "name", "age" 
-		 ]
-	 };`	 
+	 → ```javascript
+	   var query_obj = {
+			 SELECT_COLUMN: [
+			 	 "name", "age" 
+			 ]
+		 };
+		 ``` 
 
 3.
