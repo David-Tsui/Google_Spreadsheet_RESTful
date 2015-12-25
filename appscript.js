@@ -300,8 +300,6 @@ function getThisColumn(column_name) { // 回傳以0為首的column index
 }*/
 
 function checkColumnValueCorrespond(vals, search_columns) {   // POST時使用，處理多項需要驗證的資料
-  /*vals = ["2015/12/13"];
-  search_columns = [3 - 1];*/
   var doc = SpreadsheetApp.openById(SCRIPT_PROP.getProperty("key"));
   var sheet = doc.getSheetByName(SHEET_NAME);
   var headers = sheet.getRange(1, 1, 1, sheet.getLastColumn()).getValues()[0];
