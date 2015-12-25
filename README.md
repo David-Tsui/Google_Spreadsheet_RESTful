@@ -55,7 +55,7 @@ var query_obj = {
   var query_obj = {} | [] | "string";
   ```
 
-   Well, just pass something which is not null :D
+   _Well, just pass something which is not null :D_
 
 	 If ajax success, it returns: 
 
@@ -79,12 +79,12 @@ var query_obj = {
 
 2. select some row by specific column
  
-	 ```javascript
-	 var query_obj = {
-		 SELECT_COLUMN: [
-			 "name", "age" 
-		 ]
-	 };
-	 ``` 
+	```javascript
+	var query_obj = {
+		SELECT_COLUMN: [
+			"name", "age" 
+		]
+	};
+	``` 
 
 3.
