@@ -62,21 +62,21 @@ var query_obj = {
   ```javascript
   [
     {
-      header1: "something"
+      header1: "something",
       header2: 123
     },
     {
-      header1: "something"
+      header1: "something",
       header2: 123
     },
     /*
     .
     .
     .
-     */
-		{
-			header1: "something"
-		  header2: 123
+    */
+    {
+    	header1: "something",
+    	header2: 123
 		}
   ]
   ```
