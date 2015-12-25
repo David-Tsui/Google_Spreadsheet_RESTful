@@ -25,24 +25,43 @@ The usage of **GET** with ajax
 `$.get(api, {query: JSON.stringify(query_obj)}, function(){});`
 
 `var query_obj = {
+
 	SHEET_NAME: "sheetname",
+
 	SELECT_DATA: [
+
 		{
+
 			header1: "something",
+
 			header2: value
+
 		},
+
 		{
+
 			header1: "something",
+
 			header2: value
+
 		},
+
 		{
+
 			header1: "something",
+
 			header2: value
+
 		}
+
 	],
+
 	SELECT_COLUMN: [
+
 		header1, header2, header3
+
 	]
+	
 }`
 
 1. select all data at default sheet(just mentioned above)
