@@ -21,6 +21,7 @@ the api.
 
 ##APIs provided
 Use the file "appscript.js"
+
 The usage of **GET** with ajax
 
 ```javascript
