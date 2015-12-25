@@ -57,21 +57,22 @@ var query_obj = {
 
    _Well, just pass something which is not null :D_
 
-   If ajax success, it returns: 
+   
 
   ```javascript
+  // If ajax success, it returns
   [
     {
-      header1: "something",
-      header2: 123
+      header1: "aaa",
+      header2: 1
     },
     {
-      header1: "something",
-      header2: 123
+      header1: "bbb",
+      header2: 2
     },
     {
-      header1: "something",
-      header2: 123
+      header1: "ccc",
+      header2: 3
     }
     // and so on
   ]
@@ -85,6 +86,23 @@ var query_obj = {
       "name", "age" 
     ]
   };
+
+  // If ajax success, it returns
+  [
+    {
+      name: "David",
+      age: 22
+    },
+    {
+      name: "Lisa",
+      age: 17
+    },
+    {
+      name: "Peter",
+      age: 38
+    }
+    // and so on
+  ]
   ``` 
 
 3.
