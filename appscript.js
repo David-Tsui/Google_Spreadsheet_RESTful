@@ -1,21 +1,21 @@
 var SCRIPT_PROP = PropertiesService.getScriptProperties(); 
-var SHEET_NAME = "貨物進銷存";
+var SHEET_NAME = "Sheet1";
 var RECOGNIZE_COLUMN = {  /*驗證用欄位，可改成其他*/
-  username: "姓名",
-  password: "信箱"
+  username: "name",
+  password: "email"
 };
 
-var decodequery_obj = (function(d,x,params,pair,i) {
-  return function (qs) {
-    params = {};
-    qs = qs.substring(qs.indexOf('?')+1).replace(x,' ').split('&');
-    for (i = qs.length; i > 0;) {
-      pair = qs[--i].split('=');
-      params[d(pair[0])] = d(pair[1]);
-    }
-    return params;
-  };
-})(decodeURIComponent, /\+/g);
+// var decodequery_obj = (function(d,x,params,pair,i) {
+//   return function (qs) {
+//     params = {};
+//     qs = qs.substring(qs.indexOf('?')+1).replace(x,' ').split('&');
+//     for (i = qs.length; i > 0;) {
+//       pair = qs[--i].split('=');
+//       params[d(pair[0])] = d(pair[1]);
+//     }
+//     return params;
+//   };
+// })(decodeURIComponent, /\+/g);
 
 function setup() {
   var doc = SpreadsheetApp.getActiveSpreadsheet();
@@ -317,7 +317,6 @@ function checkColumnValueCorrespond(vals, search_columns) {   // POST時使用�
       }
     }
     if (check) {
-      Logger.log(rowArrToObj(row_data));   
       return rowArrToObj(row_data); 
     }
   }
@@ -369,8 +368,6 @@ function isSelectData(query_obj) {  // 是否要選擇特定資料
 }
 
 function getRowsByColumnValue(vals, search_columns) {  // GET時使用
-  /*vals = ["2015/12/13"];
-  search_columns = [3 - 1];*/
   var doc = SpreadsheetApp.openById(SCRIPT_PROP.getProperty("key"));
   var sheet = doc.getSheetByName(SHEET_NAME);
   var headers = sheet.getRange(1, 1, 1, sheet.getLastColumn()).getValues()[0];
@@ -397,7 +394,6 @@ function getRowsByColumnValue(vals, search_columns) {  // GET時使用
 }
 
 function getValuesInColumns(search_columns) { // 得到指定column的所有資料
-  //search_columns = [6 - 1, 7 - 1];
   var doc = SpreadsheetApp.openById(SCRIPT_PROP.getProperty("key"));
   var sheet = doc.getSheetByName(SHEET_NAME);
   var headers = sheet.getRange(1, 1, 1, sheet.getLastColumn()).getValues()[0];
