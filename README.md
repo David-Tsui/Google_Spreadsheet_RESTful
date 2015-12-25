@@ -60,21 +60,21 @@ var query_obj = {
 	 If ajax success, it returns: 
 
   ```javascript
-  [
-    {
-      header1: "something",
-      header2: 123
-    },
-    {
-      header1: "something",
-      header2: 123
-    },
+	[
+		{
+			header1: "something",
+			header2: 123
+		},
+		{
+			header1: "something",
+			header2: 123
+		},
 		{
 			header1: "something",
 			header2: 123
 		}
     // and so on
-  ]
+	]
   ```
 
 2. select some row by specific column
