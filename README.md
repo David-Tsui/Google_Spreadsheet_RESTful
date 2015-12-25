@@ -194,9 +194,9 @@ var query_obj = {
       SELECT_DATA: [
         {
           height: 165,
-          weight: 100
+          weight: 80
         }
       ],
-    SELECT_COLUMN: ["name", "parents"]
+    SELECT_COLUMN: ["name", "id", "parents"]
   };
   ```
