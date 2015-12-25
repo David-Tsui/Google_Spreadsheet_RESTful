@@ -49,7 +49,7 @@ var query_obj = {
 }
 ```
 
-#####1. select all data at default sheet(just mentioned above)
+#####1. select all data at default sheet(just as mentioned above)
 
   ```javascript
   var query_obj = {} | [] | "string";
@@ -181,22 +181,22 @@ var query_obj = {
 5. Switch sheet
 
   ```javascript
-    var query_obj = {
-      SHEET_NAME: "anotherSheet"
-    };
+  var query_obj = {
+    SHEET_NAME: "anotherSheet"
+  };
   ```
 
 6. Combination
 
   ```javascript
-    var query_obj = {
-      SHEET_NAME: "anotherSheet",
+  var query_obj = {
+    SHEET_NAME: "anotherSheet",
       SELECT_DATA: [
         {
           height: 165,
           weight: 100
         }
       ],
-      SELECT_COLUMN: ["name", "parents"]
-    };
+    SELECT_COLUMN: ["name", "parents"]
+  };
   ```
