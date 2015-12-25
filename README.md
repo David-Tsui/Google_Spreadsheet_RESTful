@@ -49,7 +49,7 @@ var query_obj = {
 }
 ```
 
-###1. select all data at default sheet(just mentioned above)
+#####1. select all data at default sheet(just mentioned above)
 
   ```javascript
   var query_obj = {} | [] | "string";
@@ -78,7 +78,7 @@ var query_obj = {
   ]
   ```
 
-###2. select some row by specific column
+#####2. select some row by specific column
  
   ```javascript
   var query_obj = {
