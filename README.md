@@ -20,6 +20,7 @@ The global variable "SHEET_NAME" must correspond to an exist sheet; however, it 
 the api.
 
 ##APIs provided
+Use the file "appscript.js"
 The usage of **GET** with ajax
 
 ```javascript
@@ -191,12 +192,12 @@ var query_obj = {
   ```javascript
   var query_obj = {
     SHEET_NAME: "anotherSheet",
-      SELECT_DATA: [
-        {
-          height: 165,
-          weight: 80
-        }
-      ],
+    SELECT_DATA: [
+      {
+        height: 165,
+        weight: 80
+      }
+    ],
     SELECT_COLUMN: ["name", "id", "parents"]
   };
   ```
