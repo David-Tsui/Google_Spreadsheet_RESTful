@@ -106,7 +106,7 @@ var query_obj = {
   ]
   ``` 
 
-3. select some row by specific data
+#####3. select some row by specific data
  
   ```javascript
   var query_obj = {
@@ -148,7 +148,7 @@ var query_obj = {
   ]
   ``` 
 
-4. select some row by specific data and specific column
+#####4. select some row by specific data and specific column
  
   ```javascript
   var query_obj = {
@@ -179,7 +179,7 @@ var query_obj = {
   ]
   ``` 
 
-5. Switch sheet
+#####5. Switch sheet
 
   ```javascript
   var query_obj = {
@@ -187,7 +187,7 @@ var query_obj = {
   };
   ```
 
-6. Combination
+#####6. Combination
 
   ```javascript
   var query_obj = {
