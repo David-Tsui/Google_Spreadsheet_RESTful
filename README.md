@@ -22,14 +22,41 @@ the api.
 ##APIs provided
 The usage of **GET** with ajax
 
-`$.get(api, {query: JSON.stringify(your_query)}, function(){});`
+`$.get(api, {query: JSON.stringify(query_obj)}, function(){});`
+
+`var query_obj = {
+	SHEET_NAME: "sheetname",
+	SELECT_DATA: [
+		{
+			header1: "something",
+			header2: value
+		},
+		{
+			header1: "something",
+			header2: value
+		},
+		{
+			header1: "something",
+			header2: value
+		}
+	],
+	SELECT_COLUMN: [
+		header1, header2, header3
+	]
+}`
 
 1. select all data at default sheet(just mentioned above)
 
-   → var your_query = {}, [], "string"
+   → `var query_obj = {} | [] | "string";`
 
    ````Well, just pass anything not null````
 
-2.
+2. select some data by specific column
+
+	 → `var query_obj = {
+		 SELECT_COLUMN: [
+		 	 "name", "age" 
+		 ]
+	 };`	 
 
 3.
