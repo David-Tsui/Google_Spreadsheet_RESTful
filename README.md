@@ -25,7 +25,10 @@ The usage of **GET** with ajax
 `$.get(api, {query: JSON.stringify(your_query)}, function(){});`
 
 1. select all data at default sheet(just mentioned above)
-   → var your_query = ````anything just not null````
+
+   → var your_query = {}, [], "string"
+
+   ````Well, just pass anything not null````
 
 2.
 
