@@ -28,24 +28,24 @@ $.get(api, {query: JSON.stringify(query_obj)}, function(response){ /*stmt*/ });
 
 ```javascript
 var query_obj = {
-	SHEET_NAME: "sheetname",
-	SELECT_DATA: [
-		{
-			header1: "something",
-			header2: value
-		},
-		{
-			header1: "something",
-			header2: value
-		},
-		{
-			header1: "something",
-			header2: value
-		}
-	],
-	SELECT_COLUMN: [
-		"header1", "header2", "header3"
-	]
+  SHEET_NAME: "sheetname",
+  SELECT_DATA: [
+    {
+      header1: "something",
+      header2: value
+    },
+    {
+      header1: "something",
+      header2: value
+    },
+    {
+      header1: "something",
+      header2: value
+    }
+  ],
+  SELECT_COLUMN: [
+    "header1", "header2", "header3"
+  ]
 }
 ```
 
@@ -57,34 +57,34 @@ var query_obj = {
 
    _Well, just pass something which is not null :D_
 
-	 If ajax success, it returns: 
+   If ajax success, it returns: 
 
   ```javascript
-	[
-		{
-			header1: "something",
-			header2: 123
-		},
-		{
-			header1: "something",
-			header2: 123
-		},
-		{
-			header1: "something",
-			header2: 123
-		}
+  [
+    {
+      header1: "something",
+      header2: 123
+    },
+    {
+      header1: "something",
+      header2: 123
+    },
+    {
+      header1: "something",
+      header2: 123
+    }
     // and so on
-	]
+  ]
   ```
 
 2. select some row by specific column
  
-	```javascript
-	var query_obj = {
-		SELECT_COLUMN: [
-			"name", "age" 
-		]
-	};
-	``` 
+  ```javascript
+  var query_obj = {
+    SELECT_COLUMN: [
+      "name", "age" 
+    ]
+  };
+  ``` 
 
 3.
