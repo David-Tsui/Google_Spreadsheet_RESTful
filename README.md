@@ -69,11 +69,7 @@ var query_obj = {
       header1: "something",
       header2: 123
     },
-    /*
-    .
-    .
-    .
-    */
+    // and so on
     {
     	header1: "something",
     	header2: 123
