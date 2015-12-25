@@ -105,4 +105,98 @@ var query_obj = {
   ]
   ``` 
 
-3.
+3. select some row by specific data
+ 
+  ```javascript
+  var query_obj = {
+    SELECT_DATA: [
+      {
+        date: "2015/12/25",
+        payment: "7-11"
+      }
+    ]
+  };
+
+  // If ajax success, it returns
+  [
+    {
+      date: "2015/12/25",
+      customer: "John",
+      post_num: "11008",
+      address: "臺北市信義區市府路1號",
+      phone: "0227208889",
+      payment: "7-11"
+    },
+    {
+      date: "2015/12/25",
+      customer: "Hugo",
+      post_num: "40701",
+      address: "臺中市西屯區臺灣大道三段99號",
+      phone: "0910289111",
+      payment: "7-11"
+    },
+    {
+      date: "2015/12/25",
+      customer: "Michael",
+      post_num: "80203",
+      address: "高雄市苓雅區四維三路2號",
+      phone: "886-7-3368333",
+      payment: "7-11"
+    }
+    // and so on
+  ]
+  ``` 
+
+4. select some row by specific data and specific column
+ 
+  ```javascript
+  var query_obj = {
+    SELECT_DATA: [
+      {
+        date: "2015/12/25",
+        payment: "7-11"
+      }
+    ],
+    SELECT_COLUMN: ["customer", "phone"]
+  };
+
+  // If ajax success, it returns
+  [
+    {
+      customer: "John",
+      phone: "0227208889",
+    },
+    {
+      customer: "Hugo",
+      phone: "0910289111",
+    },
+    {
+      customer: "Michael",
+      phone: "886-7-3368333",
+    }
+    // and so on
+  ]
+  ``` 
+
+5. Switch sheet
+
+  ```javascript
+    var query_obj = {
+      SHEET_NAME: "anotherSheet"
+    };
+  ```
+
+6. Combination
+
+  ```javascript
+    var query_obj = {
+      SHEET_NAME: "anotherSheet",
+      SELECT_DATA: [
+        {
+          height: 165,
+          weight: 100
+        }
+      ],
+      SELECT_COLUMN: ["name", "parents"]
+    };
+  ```
