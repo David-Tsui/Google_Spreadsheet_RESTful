@@ -1,21 +1,22 @@
 var SCRIPT_PROP = PropertiesService.getScriptProperties(); 
-var SHEET_NAME = "Sheet1";
+var SHEET_NAME = "貨物進銷存";
 var RECOGNIZE_COLUMN = {  /*驗證用欄位，可改成其他*/
-  username: "name",
-  password: "email"
+  username: "disabled",
+  password: "disabled"
 };
+var ge = "";
 
-// var decodequery_obj = (function(d,x,params,pair,i) {
-//   return function (qs) {
-//     params = {};
-//     qs = qs.substring(qs.indexOf('?')+1).replace(x,' ').split('&');
-//     for (i = qs.length; i > 0;) {
-//       pair = qs[--i].split('=');
-//       params[d(pair[0])] = d(pair[1]);
-//     }
-//     return params;
-//   };
-// })(decodeURIComponent, /\+/g);
+/*var decodequery_obj = (function(d,x,params,pair,i) {
+  return function (qs) {
+    params = {};
+    qs = qs.substring(qs.indexOf('?')+1).replace(x,' ').split('&');
+    for (i = qs.length; i > 0;) {
+      pair = qs[--i].split('=');
+      params[d(pair[0])] = d(pair[1]);
+    }
+    return params;
+  };
+})(decodeURIComponent, /\+/g);*/
 
 function setup() {
   var doc = SpreadsheetApp.getActiveSpreadsheet();
@@ -31,58 +32,59 @@ function doPost(e) {
 }
 
 function handleResponse(e, type, query_obj) {
+  ge = e;
   var lock = LockService.getPublicLock();
   lock.waitLock(30000);  // wait 30 seconds before conceding defeat.
-
+  
+  var doc = SpreadsheetApp.openById(SCRIPT_PROP.getProperty("key"));
+  var sheet = doc.getSheetByName(SHEET_NAME);
+  
+  // we'll assume header is in row 1 but you can override with header_row in GET/POST data
+  var start_row = 2;
+  
+  var headers = sheet.getRange(1, 1, 1, sheet.getLastColumn()).getValues()[0];
+  var lastRow = sheet.getLastRow();
+  var nextRow = lastRow + 1; // get next row
+  var ret = [];
+  
   try {
-    if (Object.keys(query_obj).length > 0) {
-      try {
-        if (query_obj.query !== "" && query_obj.query !== [])
-          query_obj = JSON.parse(query_obj.query);   
-        else {
-          return (
-            ContentService
-            .createTextOutput(JSON.stringify(
-              {
-                result: "error",
-                type: type,
-                reason: "Permission denied",
-                event: e
-              }
-            ))
-            .setMimeType(ContentService.MimeType.JSON)
-          ); 
+    /******************************************************** GET ********************************************************/
+    if (type == "get") { 
+      if (Object.keys(query_obj).length > 0) {
+        try {
+          if (query_obj.query !== "" && query_obj.query !== [])
+            query_obj = JSON.parse(query_obj.query);   
+          else {
+            return (
+              ContentService.createTextOutput(
+                JSON.stringify(
+                  {
+                    result: "error",
+                    type: type,
+                    reason: "Permission denied",
+                    event: e
+                  }
+                )
+              ).setMimeType(ContentService.MimeType.JSON)
+            ); 
+          }
+        } catch(exception) { // query_obj.query == "text"
+          query_obj = {};
         }
-      } catch(exception) { // query_obj.query == "text"
-        query_obj = {};
-      }
-      Logger.log(query_obj);
       
-      var doc = SpreadsheetApp.openById(SCRIPT_PROP.getProperty("key"));
-      var sheet = doc.getSheetByName(SHEET_NAME);
-      
-      // we'll assume header is in row 1 but you can override with header_row in GET/POST data
-      var start_row = e.parameter.start_row || 2; // if data has header, 2; if not, set 1.
-      
-      var headers = sheet.getRange(1, 1, 1, sheet.getLastColumn()).getValues()[0];
-      var lastRow = sheet.getLastRow();
-      var nextRow = lastRow + 1; // get next row
-      var ret = [];
-      /******************************************************** GET ********************************************************/
-      if (type == "get") {
         if (lastRow == 1) { // 試算表裡無內容，只有headers
           return (
-            ContentService
-            .createTextOutput(JSON.stringify(
-              {
-                result: "success",
-                type: type,
-                last_row: lastRow,
-                output: ret,
-                query: query_obj
-              }
-            ))
-            .setMimeType(ContentService.MimeType.JSON)
+            ContentService.createTextOutput(
+              JSON.stringify(
+                {
+                  result: "success",
+                  type: type,
+                  last_row: lastRow,
+                  output: ret,
+                  query: query_obj
+                }
+              )
+            ).setMimeType(ContentService.MimeType.JSON)
           );
         }
         var row = sheet.getRange(start_row, 1, sheet.getLastRow() - 1, headers.length).getValues();
@@ -93,7 +95,7 @@ function handleResponse(e, type, query_obj) {
           headers = sheet.getRange(1, 1, 1, sheet.getLastColumn()).getValues()[0];
           lastRow = sheet.getLastRow();
           nextRow = lastRow + 1; // get next row
-          row = sheet.getRange(start_row, 1, sheet.getLastRow() - 1, headers.length).getValues();   
+          row = sheet.getRange(start_row, 1, lastRow - 1, headers.length).getValues();   
         }
         if (isSelectColumn(query_obj) && isSelectData(query_obj)) {  // 指定欄位特定資料(return obj{} => specific rows and specific columns)
           var query_arr = query_obj["SELECT_DATA"];
@@ -122,9 +124,9 @@ function handleResponse(e, type, query_obj) {
               search_keys.push(query_obj[key]);
               search_columns.push(getThisColumn(key));
             }
-            ret.push(getRowsByColumnValue(search_keys, search_columns));             
+            ret = getRowsByColumnValue(search_keys, search_columns);             
           });   
-        } else if (isSelectColumn(query_obj) && !isSelectData(query_obj)) {  // 指定欄位全部資料(return array[] => all rows)         
+        } else if (isSelectColumn(query_obj) && !isSelectData(query_obj)) {  // 指定欄位全部資料(return obj{} => all rows)         
           var column_arr = query_obj["SELECT_COLUMN"];
           var search_columns = [];
           column_arr.forEach(function(col) {        
@@ -141,112 +143,131 @@ function handleResponse(e, type, query_obj) {
           })
         }   
         return (
-          ContentService.createTextOutput(JSON.stringify(
-            {
-              result: "success", 
-              type: type, 
-              last_row: lastRow, 
-              output: ret, 
-              query: query_obj, 
-              event: e      
-            }
-          ))
-          .setMimeType(ContentService.MimeType.JSON)
-        );
-      }
-      /****************************************************** POST ******************************************************/
-      else if (type == "post") {
-        var obj = e.parameter;
-        var arr = [];
-        var ret_row = isPostActualUpdate(obj); // 回傳是哪一row
-        if (ret_row != -1) {
-          var password_column = getThisColumn(RECOGNIZE_COLUMN.password);
-          if (CheckInfoCorrespond(ret_row, password_column, obj[RECOGNIZE_COLUMN.password])) {
-            for(var key in obj) {
-              for(var i = 0; i < headers.length; i++) {
-                if (key == headers[i]) {
-                  arr.push(i + 1);
-                  break;
-                }
-              }
-            }
-            var keys = Object.keys(obj);
-            for(var i = 0; i < keys.length; i++) {
-              var key = keys[i];
-              sheet.getRange(ret_row, arr[i], 1, 1).setValue(obj[key]);
-            }
-            var ret_obj = getRowObj(ret_row);
-            return (
-              ContentService
-              .createTextOutput(JSON.stringify(
-                {
-                  result: "success",
-                  type: "modify",
-                  output: ret_obj
-                }
-              ))
-              .setMimeType(ContentService.MimeType.JSON)
-            );
-          }
-          else {
-            return (
-              ContentService
-              .createTextOutput(JSON.stringify(
-                {
-                  result: "error",
-                  type: "modify",
-                  reason: "Authentication failed"
-                }
-              ))
-              .setMimeType(ContentService.MimeType.JSON)
-            );
-          }
-        }
-        else {   
-          headers.forEach(function(header) {
-            if (header == "Timestamp" || header == "時間戳記"){ // 當要記錄操作時間，在後端生成date
-              ret.push(new Date());
-            } else { // 用各header找資料
-              ret.push(e.parameter[header]);
-            }
-          })
-          sheet.getRange(nextRow, 1, 1, ret.length).setValues([ret]); // insert the data
-          return (
-            ContentService
-            .createTextOutput(JSON.stringify(
+          ContentService.createTextOutput(
+            JSON.stringify(
               {
                 result: "success", 
                 type: type, 
                 last_row: lastRow, 
-                insert: ret
+                output: ret, 
+                query: query_obj, 
+                event: e      
+              }
+            )
+          ).setMimeType(ContentService.MimeType.JSON)
+        );
+      } else {
+        return (
+          ContentService.createTextOutput(
+            JSON.stringify(
+              {
+                result: "error",
+                type: type,
+                reason: "Permission denied",
+                event: e
+              }
+            )
+          ).setMimeType(ContentService.MimeType.JSON)
+        ); 
+      }
+    }
+    /****************************************************** POST ******************************************************/
+    else if (type == "post") {
+      var insert_obj = e.parameter.insert;
+      insert_obj = JSON.parse(insert_obj);
+      if (isSelectSheet(insert_obj)) {  // 抓取特定工作表，重抓當前資料內容
+        SHEET_NAME = insert_obj["SHEET_NAME"];
+        sheet = doc.getSheetByName(SHEET_NAME);
+        headers = sheet.getRange(1, 1, 1, sheet.getLastColumn()).getValues()[0];
+        lastRow = sheet.getLastRow();
+        nextRow = lastRow + 1; // get next row
+      }
+      var insert_data_arr = insert_obj["DATA"];
+      var arr = [];
+      //var ret_row = isPostActualUpdate(insert_obj); // 回傳是哪一row
+      /*if (ret_row != -1) {
+        var password_column = getThisColumn(RECOGNIZE_COLUMN.password);
+        if (CheckInfoCorrespond(ret_row, password_column, insert_obj[RECOGNIZE_COLUMN.password])) {
+          for(var key in insert_obj) {
+            for(var i = 0; i < headers.length; i++) {
+              if (key == headers[i]) {
+                arr.push(i + 1);
+                break;
+              }
+            }
+          }
+          var keys = Object.keys(insert_obj);
+          for(var i = 0; i < keys.length; i++) {
+            var key = keys[i];
+            sheet.getRange(ret_row, arr[i], 1, 1).setValue(insert_obj[key]);
+          }
+          var ret_obj = getRowObj(ret_row);
+          return (
+            ContentService
+            .createTextOutput(JSON.stringify(
+              {
+                result: "success",
+                type: "modify",
+                output: ret_obj
               }
             ))
             .setMimeType(ContentService.MimeType.JSON)
           );
         }
-      } 
-    }
-    return (
-      ContentService
-      .createTextOutput(JSON.stringify(
-        {
-          result: "error",
-          type: type,
-          reason: "Permission denied",
-          event: e
+        else {
+          return (
+            ContentService.createTextOutput(
+              JSON.stringify(
+                {
+                  result: "error",
+                  type: "modify",
+                  reason: "Authentication failed"
+                }
+              )
+            ).setMimeType(ContentService.MimeType.JSON)
+          );
         }
-      ))
-      .setMimeType(ContentService.MimeType.JSON)
-    ); 
-  } catch(e){
-    return ContentService
-          .createTextOutput(JSON.stringify(
+      }*/
+      //else {   
+      insert_data_arr.forEach(function(insert_data) {
+        ret = [];
+        headers.forEach(function(header) {
+          if (header == "Timestamp" || header == "時間戳記"){ // 當要記錄操作時間，在後端生成date
+            ret.push(new Date());
+          } else { // 用各header找資料
+            ret.push(insert_data[header]);
+          }
+        })
+        sheet.getRange(nextRow, 1, 1, ret.length).setValues([ret]); // insert the data
+      })
+      
+      return (
+        ContentService.createTextOutput(
+          JSON.stringify(
             {
-              result: "error",
-              error: e
+              result: "success", 
+              type: type, 
+              last_row: lastRow, 
+              insert: ret,
+              event: e
             }
-          ))
-          .setMimeType(ContentService.MimeType.JSON);
+          )
+        ).setMimeType(ContentService.MimeType.JSON)
+      );
+      //}
+    } 
+  } catch(e){
+    return (
+      ContentService.createTextOutput(
+        JSON.stringify(
+          {
+            result: "error",
+            error: e,
+            event: ge
+          }
+        )
+      ).setMimeType(ContentService.MimeType.JSON)
+    );
   } finally {
     lock.releaseLock();
   }
@@ -300,6 +321,8 @@ function getThisColumn(column_name) { // 回傳以0為首的column index
 }*/
 
 function checkColumnValueCorrespond(vals, search_columns) {   // POST時使用，處理多項需要驗證的資料
+  /*vals = ["2015/12/13"];
+  search_columns = [3 - 1];*/
   var doc = SpreadsheetApp.openById(SCRIPT_PROP.getProperty("key"));
   var sheet = doc.getSheetByName(SHEET_NAME);
   var headers = sheet.getRange(1, 1, 1, sheet.getLastColumn()).getValues()[0];
@@ -315,6 +338,7 @@ function checkColumnValueCorrespond(vals, search_columns) {   // POST時使用�
       }
     }
     if (check) {
+      Logger.log(rowArrToObj(row_data));   
       return rowArrToObj(row_data); 
     }
   }
@@ -366,6 +390,8 @@ function isSelectData(query_obj) {  // 是否要選擇特定資料
 }
 
 function getRowsByColumnValue(vals, search_columns) {  // GET時使用
+  /*vals = ["2015/12/13"];
+  search_columns = [3 - 1];*/
   var doc = SpreadsheetApp.openById(SCRIPT_PROP.getProperty("key"));
   var sheet = doc.getSheetByName(SHEET_NAME);
   var headers = sheet.getRange(1, 1, 1, sheet.getLastColumn()).getValues()[0];
@@ -392,22 +418,22 @@ function getRowsByColumnValue(vals, search_columns) {  // GET時使用
 }
 
 function getValuesInColumns(search_columns) { // 得到指定column的所有資料
+  //search_columns = [6 - 1, 7 - 1];
   var doc = SpreadsheetApp.openById(SCRIPT_PROP.getProperty("key"));
   var sheet = doc.getSheetByName(SHEET_NAME);
   var headers = sheet.getRange(1, 1, 1, sheet.getLastColumn()).getValues()[0];
   var lastRow = sheet.getLastRow();
-  var ret_obj = {}
-  search_columns.forEach(function(col_index) { 
-    var arr = [];
-    for(var i = 2; i <= lastRow; i++) {
+  var ret_arr = []
+  for(var i = 2; i <= lastRow; i++) {
+    var temp_obj = {};
+    search_columns.forEach(function(col_index) { 
+      var header = headers[col_index];
       var value = sheet.getRange(i, col_index + 1, 1, 1).getValue(); // 取各row的value
-      arr.push(value);
-    }
-    var header = headers[col_index];
-    ret_obj[header] = arr;
-  })
-  return ret_obj;
+      temp_obj[header] = value;
+    })
+    ret_arr.push(temp_obj);
+  }
+  return ret_arr;
 }
 
 /* POST */
-
