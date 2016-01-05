@@ -22,7 +22,7 @@ the api.
 ##APIs provided
 Use the file "appscript.js"
 
-The usage of **GET** with ajax
+###The usage of **GET** with ajax
 
 ```javascript
 $.get(api, {query: JSON.stringify(query_obj)}, function(response){ /*stmt*/ });
@@ -201,4 +201,23 @@ var query_obj = {
     ],
     SELECT_COLUMN: ["name", "id", "parents"]
   };
+  ```
+
+###The usage of **POST** with ajax
+
+```javascript
+$.post(api, {insert: JSON.stringify(insert_obj)}, function(response){ /*stmt*/ });
+```
+
+  ```javascript
+  var insert_obj = {
+    SHEET_NAME: "sheet1",
+    DATA: [
+      {
+        姓名: "王小明",
+        信箱: "cccs@outlook.com",
+        年齡: 27
+      }
+    ]
+  }
   ```
