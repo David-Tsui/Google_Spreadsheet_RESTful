@@ -1,8 +1,8 @@
 var SCRIPT_PROP = PropertiesService.getScriptProperties(); 
-var SHEET_NAME = "貨物進銷存";
+var SHEET_NAME = "your_sheet_name";
 var RECOGNIZE_COLUMN = {  /*驗證用欄位，可改成其他*/
-  username: "disabled",
-  password: "disabled"
+  username: "name",
+  password: "email"
 };
 var ge = "";
 
