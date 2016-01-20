@@ -71,7 +71,14 @@ function handleResponse(e, type, query_obj) {
         } catch(exception) { // query_obj.query == "text"
           query_obj = {};
         }
-      
+        
+        if (isSelectSheet(query_obj)) {  // 抓取特定工作表，重抓當前資料內容
+          SHEET_NAME = query_obj["SHEET_NAME"];
+          sheet = doc.getSheetByName(SHEET_NAME);
+          headers = sheet.getRange(1, 1, 1, sheet.getLastColumn()).getValues()[0];
+          lastRow = sheet.getLastRow();
+          nextRow = lastRow + 1; // get next row
+        }
         if (lastRow == 1) { // 試算表裡無內容，只有headers
           return (
             ContentService.createTextOutput(
@@ -87,16 +94,7 @@ function handleResponse(e, type, query_obj) {
             ).setMimeType(ContentService.MimeType.JSON)
           );
         }
-        var row = sheet.getRange(start_row, 1, sheet.getLastRow() - 1, headers.length).getValues();
-        
-        if (isSelectSheet(query_obj)) {  // 抓取特定工作表，重抓當前資料內容
-          SHEET_NAME = query_obj["SHEET_NAME"];
-          sheet = doc.getSheetByName(SHEET_NAME);
-          headers = sheet.getRange(1, 1, 1, sheet.getLastColumn()).getValues()[0];
-          lastRow = sheet.getLastRow();
-          nextRow = lastRow + 1; // get next row
-          row = sheet.getRange(start_row, 1, lastRow - 1, headers.length).getValues();   
-        }
+        var row = sheet.getRange(start_row, 1, lastRow - 1, headers.length).getValues();
         if (isSelectColumn(query_obj) && isSelectData(query_obj)) {  // 指定欄位特定資料(return obj{} => specific rows and specific columns)
           var query_arr = query_obj["SELECT_DATA"];
           var column_arr = query_obj["SELECT_COLUMN"];
