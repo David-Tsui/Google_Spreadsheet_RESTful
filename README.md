@@ -80,7 +80,7 @@ var query_obj = {
   ]
   ```
 
-#####2. select some row by specific column
+#####2. select some rows by specific column
  
   ```javascript
   var query_obj = {
@@ -107,7 +107,7 @@ var query_obj = {
   ]
   ``` 
 
-#####3. select some row by specific data
+#####3. select some rows by specific data
  
   ```javascript
   var query_obj = {
@@ -149,7 +149,7 @@ var query_obj = {
   ]
   ``` 
 
-#####4. select some row by specific data and specific column
+#####4. select some rows by specific data and specific column
  
   ```javascript
   var query_obj = {
