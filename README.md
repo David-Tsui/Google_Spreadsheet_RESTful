@@ -1,7 +1,7 @@
 # Google_Spreadsheet_RESTful
 Easy and flexible to get data from spreadsheet and post data to it. Ajax only, no hidden iframe, no need a google form, the data explosure doGet() has been eliminated.
 
-##Build the Environment
+## Build the Environment
 
 1. Open a google spreadsheet, open the App Script editor, name your worksheet "Sheet1"(later you can modify it)
 
@@ -15,14 +15,14 @@ Easy and flexible to get data from spreadsheet and post data to it. Ajax only, n
 
 7. Copy the application url, which is the url used by ajax.
 
-##Essential Settings
+## Essential Settings
 The global variable "SHEET_NAME" must correspond to an exist sheet; however, it can switch to another after using
 the api.
 
-##APIs provided
+## APIs provided
 Use the file "appscript.js"
 
-###The usage of **GET** with ajax
+### The usage of **GET** with ajax
 
 ```javascript
 $.get(api, {query: JSON.stringify(query_obj)}, function(response){ /*stmt*/ });
@@ -51,7 +51,7 @@ var query_obj = {
 }
 ```
 
-#####1. select all data at default sheet(just as mentioned above)
+##### 1. select all data at default sheet(just as mentioned above)
 
   ```javascript
   var query_obj = {} | [] | "string";
@@ -80,7 +80,7 @@ var query_obj = {
   ]
   ```
 
-#####2. select some rows by specific column
+##### 2. select some rows by specific column
  
   ```javascript
   var query_obj = {
@@ -107,7 +107,7 @@ var query_obj = {
   ]
   ``` 
 
-#####3. select some rows by specific data
+##### 3. select some rows by specific data
  
   ```javascript
   var query_obj = {
@@ -149,7 +149,7 @@ var query_obj = {
   ]
   ``` 
 
-#####4. select some rows by specific data and specific column
+##### 4. select some rows by specific data and specific column
  
   ```javascript
   var query_obj = {
@@ -180,7 +180,7 @@ var query_obj = {
   ]
   ``` 
 
-#####5. Switch sheet
+##### 5. Switch sheet
 
   ```javascript
   var query_obj = {
@@ -188,7 +188,7 @@ var query_obj = {
   };
   ```
 
-#####6. Combination
+##### 6. Combination
 
   ```javascript
   var query_obj = {
@@ -203,7 +203,7 @@ var query_obj = {
   };
   ```
 
-###The usage of **POST** with ajax
+### The usage of **POST** with ajax
 
 ```javascript
 $.post(api, {insert: JSON.stringify(insert_obj)}, function(response){ /*stmt*/ });
